@@ -24,12 +24,45 @@
             }
           ]
         }
+      },
+      "dependsOn": [
+        {
+          "target": "build-worker",
+          "projects": "self"
+        }
+      ]
+    },
+    "build-worker": {
+      "executor": "@nrwl/node:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/api/worker",
+        "main": "apps/api/src/app/worker/main.ts",
+        "tsConfig": "apps/api/tsconfig.app.json",
+        "assets": ["apps/api/src/assets"]
+      },
+      "configurations": {
+        "watch": {
+          "watch": true
+        },
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/api/src/environments/environment.ts",
+              "with": "apps/api/src/environments/environment.prod.ts"
+            }
+          ]
+        }
       }
     },
     "serve": {
       "executor": "@nrwl/node:execute",
       "options": {
-        "buildTarget": "api:build"
+        "buildTarget": "api:build",
+        "waitUntilTargets": ["api:build-worker:watch"]
       }
     },
     "lint": {
