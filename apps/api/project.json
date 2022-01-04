@@ -10,41 +10,15 @@
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
+        "assets": ["apps/api/src/assets"],
+        "additionalEntryPoints": [
+          {
+            "entryName": "worker",
+            "entryPath": "apps/api/src/app/worker/main.ts"
+          }
+        ]
       },
       "configurations": {
-        "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/api/src/environments/environment.ts",
-              "with": "apps/api/src/environments/environment.prod.ts"
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        {
-          "target": "build-worker",
-          "projects": "self"
-        }
-      ]
-    },
-    "build-worker": {
-      "executor": "@nrwl/node:build",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/apps/api/worker",
-        "main": "apps/api/src/app/worker/main.ts",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
-      },
-      "configurations": {
-        "watch": {
-          "watch": true
-        },
         "production": {
           "optimization": true,
           "extractLicenses": true,
@@ -61,8 +35,7 @@
     "serve": {
       "executor": "@nrwl/node:execute",
       "options": {
-        "buildTarget": "api:build",
-        "waitUntilTargets": ["api:build-worker:watch"]
+        "buildTarget": "api:build"
       }
     },
     "lint": {

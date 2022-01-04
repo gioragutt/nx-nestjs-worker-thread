@@ -5,7 +5,7 @@ import { Worker } from 'worker_threads';
 export class AppService {
   async getData() {
     return new Promise((resolve, reject) => {
-      const worker = new Worker(__dirname + '/worker/main.js');
+      const worker = new Worker(__dirname + '/worker.js');
       worker.on('message', resolve);
       worker.on('error', reject);
       worker.on('exit', (code) => {
