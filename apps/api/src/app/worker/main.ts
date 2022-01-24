@@ -1,12 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { parentPort } from 'worker_threads';
+import { setInterval } from 'timers/promises';
 import { WorkerModule } from './worker.module';
-import { WorkerService } from './worker.service';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(WorkerModule);
-  const response = app.get(WorkerService).getData();
-  parentPort.postMessage(response);
+  await app.init();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for await (const _ of setInterval(1000)) {
+    if (Math.random() < 0.005) {
+      throw new Error('Alas, I died!');
+    }
+  }
 }
 
 bootstrap();
