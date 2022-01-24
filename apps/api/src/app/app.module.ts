@@ -35,14 +35,17 @@ export class AppModule
     console.log('Created worker', worker.threadId);
     this.workers.add(worker);
 
+    // saved because worker.threadId is reset to -1 when it dies.
+    const { threadId } = worker;
+
     worker.once('error', (err) => {
-      console.log('Worker', worker.threadId, 'thrown error', err);
+      console.log('Worker', threadId, 'thrown error', err);
       this.workers.delete(worker);
       this.createWorker();
     });
 
     worker.once('exit', (code) => {
-      console.log('Worker', worker.threadId, 'exited with code', code);
+      console.log('Worker', threadId, 'exited with code', code);
       this.workers.delete(worker);
     });
   }
